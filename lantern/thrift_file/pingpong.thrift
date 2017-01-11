@@ -1,0 +1,3 @@
+service PingPong {
+    string ping(),
+}
