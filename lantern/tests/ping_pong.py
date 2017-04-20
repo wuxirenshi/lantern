@@ -9,7 +9,7 @@ import os
 
 
 class PingPong(TaskSet):
-    test_file = gen_loop_csv_reader('csv/test_file.csv', '|')
+    test_file = gen_loop_csv_reader('csv/test_file.csv', '|')  # 每个参数以|分割,可以自己写
 
     def on_start(self):
         pingpong_thrift = thriftpy.load(os.path.join(ROOT_PATH, "thrift_file/pingpong.thrift"),
@@ -17,8 +17,8 @@ class PingPong(TaskSet):
         self.pingpong_client = RpcClient(pingpong_thrift.PingPong, '127.0.0.1', 6000)
 
     @task
-    @control_throughput(100)
     def get_ping(self):
+        self.test_file.next()  # 每次获取csv一行数据,可以取出放入thrift、http、socket接口中
         self.pingpong_client.ping()
 
 
